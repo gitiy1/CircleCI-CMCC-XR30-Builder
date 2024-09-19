@@ -1,0 +1,53 @@
+name: Uboot Builder
+
+on:
+    workflow_dispatch:
+    repository_dispatch:
+
+env:
+    REPO_URL: https://github.com/hanwckf/bl-mt798x
+
+jobs:
+    Uboot-Builder:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@main
+
+            - name: Initialize Build Environment
+              id: init
+              env:
+                DEBIAN_FRONTEND: noninteractive
+              run: |
+                sudo apt-get update
+                sudo apt-get install -y gcc-aarch64-linux-gnu build-essential flex bison libssl-dev device-tree-compiler
+                sudo mkdir -p /workdir
+                sudo chown $USER:$GROUPS /workdir
+                echo "status=success" >> $GITHUB_OUTPUT
+
+            - name: Clone Source Code
+              id: clone
+              if: steps.init.outcome == 'success' && !cancelled()
+              run: |
+                git clone --depth 1 $REPO_URL /workdir uboot
+                ln -sf /workdir/uboot $GITHUB_WORKSPACE/uboot
+                echo "status=success" >> $GITHUB_OUTPUT
+
+            - name: Build Uboot
+              id: build
+              if: steps.clone.outcome == 'success' && !cancelled()
+              run: |
+                cd uboot
+                chmod +x build.sh
+                SOC=mt7981 BOARD=cmcc_xr30 ./build.sh
+                ls -lsh /workdir/uboot/output
+                echo "status=success" >> $GITHUB_OUTPUT
+                echo "COMPILE_DATE=$(date +"%Y%m%d%H%M")" >> $GITHUB_ENV
+                
+            - name: Upload Uboot to Artifacts
+              if: steps.build.outcome == 'success' && !cancelled()
+              uses: actions/upload-artifact@main
+              with:
+                name: CMCC-XR30-Uboot-${{ env.COMPILE_DATE }}
+                path: /workdir/uboot/output
+                
