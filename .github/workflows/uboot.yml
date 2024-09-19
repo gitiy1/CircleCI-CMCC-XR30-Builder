@@ -28,8 +28,9 @@ jobs:
             - name: Clone Source Code
               id: clone
               if: steps.init.outcome == 'success' && !cancelled()
+              working-directory: /workdir
               run: |
-                git clone --depth 1 $REPO_URL /workdir uboot
+                git clone --depth 1 $REPO_URL uboot
                 ln -sf /workdir/uboot $GITHUB_WORKSPACE/uboot
                 echo "status=success" >> $GITHUB_OUTPUT
 
