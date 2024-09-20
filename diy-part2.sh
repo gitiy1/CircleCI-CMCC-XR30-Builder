@@ -139,8 +139,8 @@ config_package_add luci-app-autoreboot
 config_package_add kmod-macvlan
 config_package_add mwan3
 config_package_add luci-app-mwan3
-## frpc
-config_package_add luci-app-frpc
+# ## frpc
+# config_package_add luci-app-frpc
 ## mosdns
 config_package_add luci-app-mosdns
 ## curl
@@ -184,28 +184,28 @@ config_package_add luci-lib-ipkg
 config_package_add byobu
 config_package_add tmux
 
-## Frp Latest version patch
+# ## Frp Latest version patch
 
-FRP_MAKEFILE_PATH="feeds/packages/net/frp/Makefile"
+# FRP_MAKEFILE_PATH="feeds/packages/net/frp/Makefile"
 
-FRP_LATEST_RELEASE=$(curl -s https://api.github.com/repos/fatedier/frp/releases/latest | grep -Po '"tag_name": "\K.*?(?=")')
+# FRP_LATEST_RELEASE=$(curl -s https://api.github.com/repos/fatedier/frp/releases/latest | grep -Po '"tag_name": "\K.*?(?=")')
 
-if [ -z "$FRP_LATEST_RELEASE" ]; then
-  echo "无法获取最新的 Release 名称"
-  exit 1
-fi
+# if [ -z "$FRP_LATEST_RELEASE" ]; then
+  # echo "无法获取最新的 Release 名称"
+  # exit 1
+# fi
 
-FRP_LATEST_VERSION=${FRP_LATEST_RELEASE#v}
+# FRP_LATEST_VERSION=${FRP_LATEST_RELEASE#v}
 
-FRP_PKG_NAME="frp"
-FRP_PKG_SOURCE="${FRP_PKG_NAME}-${FRP_LATEST_VERSION}.tar.gz"
-FRP_PKG_SOURCE_URL="https://codeload.github.com/fatedier/frp/tar.gz/v${FRP_LATEST_VERSION}?"
-curl -L -o "$FRP_PKG_SOURCE" "$FRP_PKG_SOURCE_URL"
+# FRP_PKG_NAME="frp"
+# FRP_PKG_SOURCE="${FRP_PKG_NAME}-${FRP_LATEST_VERSION}.tar.gz"
+# FRP_PKG_SOURCE_URL="https://codeload.github.com/fatedier/frp/tar.gz/v${FRP_LATEST_VERSION}?"
+# curl -L -o "$FRP_PKG_SOURCE" "$FRP_PKG_SOURCE_URL"
 
-FRP_PKG_HASH=$(sha256sum "$FRP_PKG_SOURCE" | awk '{print $1}')
-rm -r "$FRP_PKG_SOURCE"
+# FRP_PKG_HASH=$(sha256sum "$FRP_PKG_SOURCE" | awk '{print $1}')
+# rm -r "$FRP_PKG_SOURCE"
 
-sed -i "s/^PKG_VERSION:=.*/PKG_VERSION:=${FRP_LATEST_VERSION}/" "$FRP_MAKEFILE_PATH"
-sed -i "s/^PKG_HASH:=.*/PKG_HASH:=${FRP_PKG_HASH}/" "$FRP_MAKEFILE_PATH"
+# sed -i "s/^PKG_VERSION:=.*/PKG_VERSION:=${FRP_LATEST_VERSION}/" "$FRP_MAKEFILE_PATH"
+# sed -i "s/^PKG_HASH:=.*/PKG_HASH:=${FRP_PKG_HASH}/" "$FRP_MAKEFILE_PATH"
 
-echo "已更新 Makefile 中的 PKG_VERSION 和 PKG_HASH"
+# echo "已更新 Makefile 中的 PKG_VERSION 和 PKG_HASH"
