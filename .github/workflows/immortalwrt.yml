@@ -158,7 +158,7 @@ jobs:
                 echo "status=success" >> $GITHUB_OUTPUT
 
             - name: Upload firmware to Artifacts
-              if: steps.organize.outcome == 'success' && !cancelled()
+              # if: steps.organize.outcome == 'success' && !cancelled()
               uses: actions/upload-artifact@main
               with:
                 name: ${{ env.COMPILE_DATE }}-${{ env.OPENWRT_NAME }}-${{ env.UPLOAD_TAG_NAME }}${{ env.WIFI_INTERFACE }}
