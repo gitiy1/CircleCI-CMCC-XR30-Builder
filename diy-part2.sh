@@ -112,7 +112,7 @@ config_package_add luci-app-wol
 ## QR Code Generator
 config_package_add qrencode
 ## Zsh
-config_package_add zsh
+# config_package_add zsh
 ## Temporarily disable USB3.0
 config_package_add luci-app-usb3disable
 ## USB
@@ -142,7 +142,7 @@ config_package_add luci-app-mwan3
 # ## frpc
 # config_package_add luci-app-frpc
 ## mosdns
-config_package_add luci-app-mosdns
+# config_package_add luci-app-mosdns
 ## curl
 config_package_add curl
 ## netcat
