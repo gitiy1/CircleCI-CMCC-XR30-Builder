@@ -162,4 +162,4 @@ jobs:
               uses: actions/upload-artifact@main
               with:
                 name: ${{ env.COMPILE_DATE }}-${{ env.OPENWRT_NAME }}-${{ env.UPLOAD_TAG_NAME }}${{ env.WIFI_INTERFACE }}
-                path: ${{ env.FIRMWARE }}
+                path: /workdir/openwrt/bin/targets
