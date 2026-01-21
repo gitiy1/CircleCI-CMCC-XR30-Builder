@@ -446,6 +446,14 @@ function setup_third_party_packages() {
         echo "🌐 Cloning third-party packages..."
         git clone --depth 1 https://github.com/217heidai/OpenWrt-Packages.git package/custom/OpenWrt-Packages
     fi
+
+    # Pin luci-theme-argon to tag 2.3.2
+    drop_package "luci-theme-argon"
+    if [ ! -d "package/custom/luci-theme-argon" ]; then
+        echo "🎨 Cloning luci-theme-argon (tag 2.3.2)..."
+        git clone https://github.com/jerrykuku/luci-theme-argon package/custom/luci-theme-argon
+        git -C package/custom/luci-theme-argon checkout tags/2.3.2
+    fi
     
     # Clean conflicting packages
     # clean_packages package/custom/OpenWrt-Packages
