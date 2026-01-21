@@ -452,7 +452,13 @@ function setup_third_party_packages() {
     if [ ! -d "package/custom/luci-theme-argon" ]; then
         echo "🎨 Cloning luci-theme-argon (tag 2.3.2)..."
         git clone https://github.com/jerrykuku/luci-theme-argon package/custom/luci-theme-argon
-        git -C package/custom/luci-theme-argon checkout tags/2.3.2
+    fi
+    git -C package/custom/luci-theme-argon fetch --tags --force
+    if ! git -C package/custom/luci-theme-argon checkout -q tags/v2.3.2; then
+        git -C package/custom/luci-theme-argon checkout -q tags/2.3.2 || {
+            echo "❌ Failed to checkout luci-theme-argon tag v2.3.2"
+            exit 1
+        }
     fi
     
     # Clean conflicting packages
