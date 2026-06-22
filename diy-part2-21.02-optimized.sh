@@ -441,10 +441,10 @@ function setup_third_party_packages() {
     # Create custom package directory
     mkdir -p package/custom
     
-    # Clone third-party package repository
+    # Clone third-party package repository (gitiy1 fork with openwrt-21.02 branch)
     if [ ! -d "package/custom/OpenWrt-Packages" ]; then
         echo "🌐 Cloning third-party packages..."
-        git clone --depth 1 https://github.com/217heidai/OpenWrt-Packages.git package/custom/OpenWrt-Packages
+        git clone --depth 1 -b openwrt-21.02 https://github.com/gitiy1/OpenWrt-Packages.git package/custom/OpenWrt-Packages
     fi
 
     # Remove luci-theme-argon from custom OpenWrt-Packages
@@ -453,9 +453,8 @@ function setup_third_party_packages() {
     # Remove duplicate packages from feeds when present in custom packages
     clean_packages package/custom/OpenWrt-Packages
 
-    # Prefer custom packages over feeds for specific versions
-    drop_package "xray-core"
-    drop_package "xray-geodata"
+    # Note: xray-core and xray-geodata are provided by gitiy1/OpenWrt-Packages,
+    # clean_packages above already handles feed deduplication, no need to drop explicitly
 
     # Pin luci-theme-argon to tag 2.3.2
     drop_package "luci-theme-argon"
@@ -474,12 +473,11 @@ function setup_third_party_packages() {
     # Clean conflicting packages
     # clean_packages package/custom/OpenWrt-Packages
     
-    # Update golang to latest version
+    # Update golang to latest version (use the one from custom packages)
     if [ -d "package/custom/OpenWrt-Packages/golang" ]; then
-        echo "🔄 Updating golang to latest version..."
+        echo "🔄 Updating golang from custom packages..."
         rm -rf feeds/packages/lang/golang
-        git clone https://github.com/sbwml/packages_lang_golang feeds/packages/lang/golang
-        # mv package/custom/OpenWrt-Packages/golang feeds/packages/lang/
+        cp -r package/custom/OpenWrt-Packages/golang feeds/packages/lang/golang
     fi
     
     # Clone specific apps
@@ -494,6 +492,12 @@ function setup_third_party_packages() {
     # if [ ! -d "package/daed" ]; then
     #     git clone https://github.com/QiuSimons/luci-app-daed package/daed
     # fi
+    
+    # UA-Mask for User-Agent modification (campus network multi-device sharing)
+    if [ ! -d "package/custom/UA-Mask" ]; then
+        echo "🛡️ Cloning UA-Mask..."
+        git clone --depth 1 https://github.com/iceyear/UA-Mask.git package/custom/UA-Mask
+    fi
     
     echo "✅ Third-party packages setup completed"
 }
@@ -640,6 +644,10 @@ function configure_custom_applications() {
     # config_package_add "kmod-nft-socket"
     # config_package_add "kmod-nft-tproxy"
     
+    # UA-Mask for User-Agent modification
+    echo "🛡️ Enabling UA-Mask..."
+    config_package_add "UAmask"
+
     # Upnp
     config_package_add "luci-app-upnp"
     config_package_add "miniupnpd"
