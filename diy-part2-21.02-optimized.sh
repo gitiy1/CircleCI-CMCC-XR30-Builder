@@ -492,7 +492,8 @@ function setup_third_party_packages() {
     # if [ ! -d "package/daed" ]; then
     #     git clone https://github.com/QiuSimons/luci-app-daed package/daed
     # fi
-    
+
+    drop_package "UA-Mask"
     # UA-Mask for User-Agent modification (campus network multi-device sharing)
     if [ ! -d "package/custom/UA-Mask" ]; then
         echo "🛡️ Cloning UA-Mask..."
